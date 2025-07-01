@@ -59,4 +59,3 @@ yarn build
 ---
 
 For more, see `docs.md`.
-# visual-prompt-builder
