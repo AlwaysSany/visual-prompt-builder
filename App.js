@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button, TextField, List, ListItem, ListItemText, Dialog, DialogTitle, DialogContent, DialogActions, Typography, Paper } from '@mui/material';
 
 function App() {
@@ -7,20 +7,45 @@ function App() {
     const [editingIndex, setEditingIndex] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
 
+    // --- Persistence helpers ---
+    const TEMPLATES_KEY = 'promptBuilderTemplates';
+    function loadTemplatesFromStorage() {
+        try {
+            const saved = localStorage.getItem(TEMPLATES_KEY);
+            return saved ? JSON.parse(saved) : [];
+        } catch (e) {
+            console.error('Failed to load templates:', e);
+            return [];
+        }
+    }
+    function saveTemplatesToStorage(templates) {
+        try {
+            localStorage.setItem(TEMPLATES_KEY, JSON.stringify(templates));
+        } catch (e) {
+            console.error('Failed to save templates:', e);
+        }
+    }
+    useEffect(() => {
+        setTemplates(loadTemplatesFromStorage());
+    }, []);
+
     const handleSave = () => {
+        let newTemplates;
         if (editingIndex !== null) {
-            // Update existing template
-            const updated = [...templates];
-            updated[editingIndex] = { ...currentTemplate };
-            setTemplates(updated);
+            const updated = { ...currentTemplate, id: templates[editingIndex].id };
+            newTemplates = [...templates];
+            newTemplates[editingIndex] = updated;
             setEditingIndex(null);
         } else {
-            // Add new template
-            setTemplates([...templates, { ...currentTemplate }]);
+            const newTemplate = { ...currentTemplate, id: Date.now(), createdAt: new Date().toISOString() };
+            newTemplates = [...templates, newTemplate];
         }
+        setTemplates(newTemplates);
+        saveTemplatesToStorage(newTemplates);
         setCurrentTemplate({ name: '', content: '' });
         setDialogOpen(false);
     };
+
 
     const handleEdit = (index) => {
         setCurrentTemplate({ ...templates[index] });

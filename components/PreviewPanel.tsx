@@ -10,6 +10,7 @@ interface PreviewPanelProps {
   generateStructuredData: () => object;
   copyToClipboard: () => void;
   downloadPrompt: () => void;
+  generateDynamicPromptSentence: () => string;
 }
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({
@@ -19,6 +20,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
   generateStructuredData,
   copyToClipboard,
   downloadPrompt,
+  generateDynamicPromptSentence,
 }) => {
   const handleTabChange = (_: React.SyntheticEvent, newValue: 'natural' | 'structured') => {
     setActivePanel(newValue);
@@ -30,6 +32,12 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
   return (
     <Box>
       <Typography variant="h6" sx={{ mb: 1 }}>Prompt Preview</Typography>
+      {/* Dynamic sentence preview */}
+      <Paper variant="outlined" sx={{ p: 2, mb: 2, background: '#f8f9fa' }}>
+        <Typography variant="subtitle1" color="primary" sx={{ fontWeight: 600 }}>
+          {generateDynamicPromptSentence()}
+        </Typography>
+      </Paper>
       <Tabs
         value={activePanel}
         onChange={handleTabChange}

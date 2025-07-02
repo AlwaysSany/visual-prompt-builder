@@ -223,7 +223,7 @@ const PromptForm: React.FC<PromptFormProps> = ({ formData, setFormData }) => {
       </Box>
 
       <Box mt={4}>
-        <Typography variant="h6" mb={2}>DevOps Configuration</Typography>
+        <Typography variant="h6" mb={2}>Project Configuration</Typography>
         <FormControl fullWidth>
           <InputLabel>Configuration Files</InputLabel>
           <Select

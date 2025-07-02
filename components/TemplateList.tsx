@@ -1,5 +1,5 @@
 import React from 'react';
-import { List, ListItem, ListItemText, IconButton, TextField, Button, Typography, Box } from '@mui/material';
+import { List, ListItem, ListItemText, IconButton, TextField, Button, Typography, Box, Dialog, DialogTitle, DialogContent, DialogActions } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FolderOpenIcon from '@mui/icons-material/FolderOpen';
 
@@ -17,6 +17,8 @@ interface TemplateListProps {
   templateName: string;
   setTemplateName: React.Dispatch<React.SetStateAction<string>>;
   saveTemplate: () => void;
+  onEdit: (template: Template) => void;
+  isEditing: boolean;
 }
 
 const TemplateList: React.FC<TemplateListProps> = ({
@@ -26,10 +28,29 @@ const TemplateList: React.FC<TemplateListProps> = ({
   templateName,
   setTemplateName,
   saveTemplate,
+  onEdit,
+  isEditing,
 }) => {
+  const [confirmOpen, setConfirmOpen] = React.useState(false);
+  const [deleteId, setDeleteId] = React.useState<number | null>(null);
+
+  const handleDeleteClick = (id: number) => {
+    setDeleteId(id);
+    setConfirmOpen(true);
+  };
+  const handleConfirmDelete = () => {
+    if (deleteId !== null) deleteTemplate(deleteId);
+    setConfirmOpen(false);
+    setDeleteId(null);
+  };
+  const handleCancelDelete = () => {
+    setConfirmOpen(false);
+    setDeleteId(null);
+  };
+
   return (
     <Box>
-      <Typography variant="h6" sx={{ mb: 1 }}>Templates</Typography>
+      <Typography variant="h6" sx={{ mb: 1 }}>Prompt Templates</Typography>
       <List dense>
         {savedTemplates.length === 0 && (
           <ListItem>
@@ -44,7 +65,10 @@ const TemplateList: React.FC<TemplateListProps> = ({
                 <IconButton edge="end" aria-label="load" onClick={() => loadTemplate(tpl)} size="small">
                   <FolderOpenIcon />
                 </IconButton>
-                <IconButton edge="end" aria-label="delete" onClick={() => deleteTemplate(tpl.id)} size="small">
+                <IconButton edge="end" aria-label="edit" onClick={() => onEdit(tpl)} size="small" sx={{ ml: 0.5 }}>
+                  <span role="img" aria-label="edit">✏️</span>
+                </IconButton>
+                <IconButton edge="end" aria-label="delete" onClick={() => handleDeleteClick(tpl.id)} size="small">
                   <DeleteIcon />
                 </IconButton>
               </>
@@ -60,16 +84,27 @@ const TemplateList: React.FC<TemplateListProps> = ({
       <Box mt={2} display="flex" gap={1}>
         <TextField
           size="small"
-          label="New Template Name"
+          label={isEditing ? "Edit Template Name" : "New Template Name"}
           value={templateName}
           onChange={e => setTemplateName(e.target.value)}
           fullWidth
         />
         <Button variant="contained" onClick={saveTemplate} sx={{ minWidth: 90 }}>
-          Save
+          {isEditing ? "Update" : "Save"}
         </Button>
       </Box>
-    </Box>
+    {/* Delete confirmation dialog */}
+    <Dialog open={confirmOpen} onClose={handleCancelDelete}>
+      <DialogTitle>Delete Template?</DialogTitle>
+      <DialogContent>
+        Are you sure you want to delete this template? This action cannot be undone.
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleCancelDelete}>Cancel</Button>
+        <Button onClick={handleConfirmDelete} color="error" variant="contained">Delete</Button>
+      </DialogActions>
+    </Dialog>
+  </Box>
   );
 };
 

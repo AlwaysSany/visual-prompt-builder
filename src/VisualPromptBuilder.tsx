@@ -36,42 +36,124 @@ const VisualPromptBuilder = () => {
   const [savedTemplates, setSavedTemplates] = useState<any[]>([]);
   const [templateName, setTemplateName] = useState('');
   const [activePanel, setActivePanel] = useState<'natural' | 'structured'>('natural');
-  // Load templates from localStorage on component mount
-  useEffect(() => {
-    const saved = localStorage.getItem('promptBuilderTemplates');
-    if (saved) {
-      setSavedTemplates(JSON.parse(saved));
+  const [editingId, setEditingId] = useState<number | null>(null);
+  // --- Template Persistence Helpers ---
+  const TEMPLATES_KEY = 'promptBuilderTemplates';
+
+  function loadTemplatesFromStorage() {
+    try {
+      const saved = localStorage.getItem(TEMPLATES_KEY);
+      return saved ? JSON.parse(saved) : [];
+    } catch (e) {
+      console.error('Failed to load templates:', e);
+      return [];
     }
+  }
+
+  function saveTemplatesToStorage(templates: any[]) {
+    try {
+      localStorage.setItem(TEMPLATES_KEY, JSON.stringify(templates));
+    } catch (e) {
+      console.error('Failed to save templates:', e);
+    }
+  }
+
+  // --- Load templates on mount ---
+  useEffect(() => {
+    setSavedTemplates(loadTemplatesFromStorage());
   }, []);
-  // Template handlers
+
+  // --- Template handlers ---
   const saveTemplate = () => {
     if (!templateName) {
       alert('Please enter a template name');
       return;
     }
-    const template = {
-      id: Date.now(),
-      name: templateName,
-      data: formData,
-      createdAt: new Date().toISOString()
-    };
-    const updated = [...savedTemplates, template];
+    let updated;
+    if (editingId !== null) {
+      updated = savedTemplates.map(t =>
+        t.id === editingId ? { ...t, name: templateName, data: formData } : t
+      );
+    } else {
+      const template = {
+        id: Date.now(),
+        name: templateName,
+        data: formData,
+        createdAt: new Date().toISOString()
+      };
+      updated = [...savedTemplates, template];
+    }
     setSavedTemplates(updated);
-    localStorage.setItem('promptBuilderTemplates', JSON.stringify(updated));
+    saveTemplatesToStorage(updated);
     setTemplateName('');
+    setEditingId(null);
     alert('Template saved successfully!');
   };
+
   const loadTemplate = (template: any) => {
     setFormData(template.data);
+    setTemplateName('');
+    setEditingId(null); // Not editing, just loading for use
   };
+
+
+  // Called when Edit is pressed
+  const handleEditTemplate = (template: any) => {
+    setFormData(template.data);
+    setTemplateName(template.name);
+    setEditingId(template.id);
+  };
+
   const deleteTemplate = (id: number) => {
     const updated = savedTemplates.filter(t => t.id !== id);
     setSavedTemplates(updated);
-    localStorage.setItem('promptBuilderTemplates', JSON.stringify(updated));
+    saveTemplatesToStorage(updated);
   };
+
   // Prompt preview
+  // Dynamic prompt sentence based on selections
+  const generateDynamicPromptSentence = () => {
+    const {
+      projectDomain,
+      language,
+      projectType,
+      projectScale,
+      framework,
+      packageManager,
+      configFiles
+    } = formData;
+    let sentence = "";
+    if (!projectDomain && !projectType && !language) {
+      return "Fill out the form to generate a prompt.";
+    }
+    if (projectDomain) {
+      sentence += `You are an expert ${projectDomain.toLowerCase()} developer`;
+    }
+    if (language) {
+      sentence += ` specializing in ${language}`;
+    }
+    if (projectType) {
+      sentence += `. Act as a ${projectType.toLowerCase()} build master`;
+    }
+    if (framework) {
+      sentence += ` using the ${framework} framework`;
+    }
+    if (packageManager) {
+      sentence += ` and managing packages with ${packageManager}`;
+    }
+    if (projectScale) {
+      sentence += `. The project scale is ${projectScale.toLowerCase()}`;
+    }
+    if (configFiles && configFiles.length > 0) {
+      sentence += `. Prepare configuration files: ${configFiles.join(', ')}`;
+    }
+    return sentence + ".";
+  };
+
   const generateNaturalLanguagePrompt = () => {
     const parts = [];
+    // Insert the dynamic sentence at the top
+    parts.push(generateDynamicPromptSentence() + '\n');
     parts.push("# Project Specification\n");
     if (formData.featureDescription) {
       parts.push(`## Product Overview\n${formData.featureDescription}\n`);
@@ -114,6 +196,7 @@ const VisualPromptBuilder = () => {
   };
   const generateStructuredData = () => {
     return {
+      promptSummary: generateDynamicPromptSentence(),
       project: {
         domain: formData.projectDomain,
         type: formData.projectType,
@@ -132,6 +215,7 @@ const VisualPromptBuilder = () => {
       }
     };
   };
+
   const copyToClipboard = () => {
     const content = activePanel === 'natural'
       ? generateNaturalLanguagePrompt()
@@ -167,6 +251,8 @@ const VisualPromptBuilder = () => {
                 templateName={templateName}
                 setTemplateName={setTemplateName}
                 saveTemplate={saveTemplate}
+                onEdit={handleEditTemplate}
+                isEditing={editingId !== null}
               />
             </Grid>
             <Grid item xs={12} md={6}>
@@ -183,6 +269,7 @@ const VisualPromptBuilder = () => {
                 generateStructuredData={generateStructuredData}
                 copyToClipboard={copyToClipboard}
                 downloadPrompt={downloadPrompt}
+                generateDynamicPromptSentence={generateDynamicPromptSentence}
               />
             </Grid>
           </Grid>
