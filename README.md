@@ -46,13 +46,6 @@ This project is a web application that allows users to visually compose project 
   - Persistent storage using localStorage
   - Responsive layout for all devices
 
-### Recent Enhancements
-- Streamlined edit/update workflow
-- Added delete confirmation dialog
-- Improved dynamic preview generation
-- Enhanced UI/UX with better feedback
-- Optimized performance and accessibility
-
 ## Getting Started
 
 ### Prerequisites
