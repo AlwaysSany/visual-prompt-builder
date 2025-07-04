@@ -67,6 +67,9 @@ const TemplateList: React.FC<TemplateListProps> = ({
       transition: 'box-shadow 0.2s',
     }}>
       <Typography variant="h6" sx={{ fontWeight: 700, fontSize: 20, color: '#2e90fa', letterSpacing: 1, mb: 1 }}>Prompt Templates</Typography>
+      <Box sx={{ borderBottom: '4px solid #283a5b', my: 1 }} />
+      
+
       <List dense sx={{ width: '100%', maxHeight: '60vh', overflowY: 'auto', pr: 1 }}>
         {savedTemplates.length === 0 && (
           <ListItem>

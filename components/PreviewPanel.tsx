@@ -47,6 +47,10 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({
       marginRight: 0,
       position: 'relative',
     }}>
+      <Typography variant="h6" sx={{ fontWeight: 700, fontSize: 18, color: '#2e90fa', mb: 1 }}>
+        Prompt Preview
+      </Typography>
+      <Box sx={{ borderBottom: '4px solid #283a5b', my: 1 }} />
       <Tabs
         value={activePanel}
         onChange={handleTabChange}
