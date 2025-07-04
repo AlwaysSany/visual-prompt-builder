@@ -253,6 +253,23 @@ const VisualPromptBuilder = () => {
                 saveTemplate={saveTemplate}
                 onEdit={handleEditTemplate}
                 isEditing={editingId !== null}
+                cloneTemplate={(template) => {
+                  // Clone: create a new template with the same data, new id, and name 'Copy of ...'
+                  const newTemplate = {
+                    ...template,
+                    id: Date.now(),
+                    name: `Copy of ${template.name}`,
+                    createdAt: new Date().toISOString(),
+                  };
+                  setSavedTemplates(prev => {
+                    const updated = [...prev, newTemplate];
+                    saveTemplatesToStorage(updated);
+                    return updated;
+                  });
+                  setFormData(template.data);
+                  setTemplateName(`Copy of ${template.name}`);
+                  setEditingId(newTemplate.id);
+                }}
               />
             </Grid>
             <Grid item xs={12} md={6}>

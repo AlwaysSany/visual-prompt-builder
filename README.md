@@ -2,6 +2,14 @@
 
 A modern, interactive React + TypeScript web app for visually composing project prompts and templates.
 
+## Working Demo
+
+See Live: [Visual Prompt Builder](https://visual-prompt-builder.vercel.app)
+
+## Project Overview
+
+This project is a web application that allows users to visually compose project prompts and templates. It provides a user-friendly interface for selecting project domain, language, framework, config files, and describing the project. The application generates a dynamic summary sentence and a detailed prompt in both Natural Language and JSON formats. Users can save templates for quick reuse and edit or update existing templates in-place. The application also includes a confirmation dialog to prevent accidental loss of templates and provides options to copy or download the prompt.
+
 ## Features
 - **Modular, component-based UI** using Material-UI
 - **Live prompt preview**: See your prompt in both Natural Language and JSON formats as you build

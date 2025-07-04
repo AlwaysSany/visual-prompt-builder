@@ -106,8 +106,20 @@ const PromptForm: React.FC<PromptFormProps> = ({ formData, setFormData }) => {
   };
 
   return (
-    <Box>
-      <Typography variant="h6" mb={2}>Project Scope</Typography>
+    <Box sx={{
+      background: '#232c43',
+      borderRadius: 8,
+      boxShadow: '0 8px 32px 0 rgba(36,48,74,0.18)',
+      p: 3,
+      mt: 2,
+      minHeight: 480,
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 3,
+      border: '1.5px solid #283a5b',
+      transition: 'box-shadow 0.2s',
+    }}>
+      <Typography variant="h6" sx={{ fontWeight: 700, fontSize: 18, color: '#2e90fa', mb: 1 }}>Project Scope</Typography>
       <Grid container spacing={2}>
         <Grid item xs={12} sm={6}>
           <FormControl fullWidth>
@@ -181,7 +193,7 @@ const PromptForm: React.FC<PromptFormProps> = ({ formData, setFormData }) => {
       </Grid>
 
       <Box mt={4}>
-        <Typography variant="h6" mb={2}>Framework & Tools</Typography>
+        <Typography variant="h6" sx={{ fontWeight: 700, fontSize: 18, color: '#2e90fa', mb: 1 }}>Framework & Tools</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth disabled={!formData.language}>
@@ -223,7 +235,7 @@ const PromptForm: React.FC<PromptFormProps> = ({ formData, setFormData }) => {
       </Box>
 
       <Box mt={4}>
-        <Typography variant="h6" mb={2}>Project Configuration</Typography>
+        <Typography variant="h6" sx={{ fontWeight: 700, fontSize: 18, color: '#2e90fa', mb: 1 }}>Project Configuration</Typography>
         <FormControl fullWidth>
           <InputLabel>Configuration Files</InputLabel>
           <Select
@@ -251,7 +263,7 @@ const PromptForm: React.FC<PromptFormProps> = ({ formData, setFormData }) => {
       </Box>
 
       <Box mt={4}>
-        <Typography variant="h6" mb={2}>Product Details</Typography>
+        <Typography variant="h6" sx={{ fontWeight: 700, fontSize: 18, color: '#2e90fa', mb: 1 }}>Product Details</Typography>
         <TextField
           label="Feature Description"
           fullWidth
@@ -296,7 +308,7 @@ const PromptForm: React.FC<PromptFormProps> = ({ formData, setFormData }) => {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => handleOtherDialogClose(false)}>Cancel</Button>
-          <Button onClick={() => handleOtherDialogClose(true)} variant="contained">Save</Button>
+          <Button onClick={() => handleOtherDialogClose(true)} variant="containedd">Save</Button>
         </DialogActions>
       </Dialog>
     </Box>
