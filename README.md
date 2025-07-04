@@ -6,7 +6,7 @@ A modern, interactive React + TypeScript web app for visually composing project 
 
 ![visual-prompt-builder](https://github.com/user-attachments/assets/971f34c9-a027-47d5-951c-4b4bac3f6e9f)
 
-See at Live: [Visual Prompt Builder](https://visual-prompt-builder.vercel.app)
+See at Live: [Visual Prompt Builder](https://visual-prompt-builder-six.vercel.app/)
 
 ## Project Overview
 
