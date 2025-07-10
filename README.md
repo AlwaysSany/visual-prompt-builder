@@ -89,8 +89,16 @@ yarn build
 - TypeScript strict mode enabled.
 
 ## Roadmap
-- Drag-and-drop form builder (see docs.md)
-- Backend integration for cloud persistence (optional)
+- Add authentication for different users prompt isolation.
+- Intergrate LLM APIs to directly interact based on generated text prompt.
+- Add load balancer and make it scalable for handling large request volume.
+- Add caching to provide frequently used prompt.
+- Add bookmark feature for favorite prompt.
+- Add share prompt feature.
+- Upload files for conext enhancement along with visual prompt element.
+- Add chat UI and backend to integrate 3rd party LLMs and APIs 
+- Drag-and-drop form builder if some advanced elements needed (see docs.md)
+- Backend integration for prompt persistence.
 - Export to YAML and other formats
 
 ---
